@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee</title>
+    <title>Control structures</title>
 </head>
 <body>
     <header>
@@ -11,12 +11,13 @@
     </header>
     
     <main>
-   
-        <section id="employee-details">
-        <p>Name: {{$employee ['name']}}</p>
-        <p>Age: {{$employee ['age']}}</p>
-        <p>Department: {{$employee ['department']}}</p>
-        </section>
+        @if($grade == 75)
+            <p>good!</p>
+        @elseif($grade > 75)
+            <p>good job!</p>
+        @else
+            <p>keep trying!</p>
+        @endif
     </main>
     <footer>
         <p>&copy; 2023 Company Name. All rights reserved.</p>
