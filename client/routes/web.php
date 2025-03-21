@@ -1,55 +1,36 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-use App\Http\Controllers\PageController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-
-/*Route::get('greet/{name?}', function ($name ="Lucille") {
-    return 'Welcome to the world of Laravel'.$name;
-
-
+Route::get('/comment', function () {
+    return view('comment');
 });
 
-Route::get('/admin/dashboard', function () {
-    return "dashboard";
-});
-Route::get('/admin/profile', function () {
-    return "profile";
-});
-Route::group(['prefix' => 'admin'], function(){
-    Route::get ('dashboard', function(){
-        return "dashboard";
-    });
+Route::middleware(['auth'])->group(function () {
+    Route::post('/send-comment', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/get-comments/{id}/{cpID}/{cpType}', [CommentController::class, 'show'])->name('comments.show');
+    Route::post('/send-reply', [CommentController::class, 'storeReply']);
+    Route::get('/get-replies/{id}', [CommentController::class, 'showReplies']);
+    Route::get('/count-replies-attachments/{id}/{cpID}/{cpType}', [CommentController::class, 'countRepliesAndAttachments']);
+    Route::get('/open-comment/{id}/{cpID}/{cpType}', [CommentController::class, 'openComment']);
+    Route::get('/delete-reply/{id}', [CommentController::class, 'deleteReply']);
+    Route::get('/delete-comment/{id}', [CommentController::class, 'deleteComment']);
+    Route::get('/archive-comment/{id}', [CommentController::class, 'archiveComment']);
+    Route::get('/get-latest-comment/{id}/{cpID}/{cpType}', [CommentController::class, 'getLatestComment']);
+    Route::get('/count-comments/{id}/{cpID}/{cpType}', [CommentController::class, 'countComments']);
+    Route::post('/update-comment-reply', [CommentController::class, 'updateCommentReply']);
 });
 
-Route::get('contactus', [PageController::class, 'contactus']);
-Route::get('aboutus', [PageController::class, 'Aboutus']);
-*/
-//api para dun sa nasa views. 
-Route::get('/contactus',[PageController::class, 'contactus']);
-Route::get('/aboutus', [PageController::class, 'aboutus']);
-
-Route::get('/employee', function () {
-
-    $age=22;
-    $grade = 75;
-    $employee =array (
-        array('name' => 'Juan Dela Cruz', 'age' => 25, 'dept' => 'IT'),
-        array('name' => 'Pedro Penduko', 'age' => 22, 'dept' => 'HR'),
-        array('name' => 'Juan Tamad', 'age' => 30, 'dept' => 'IT'),
-    )
-    ;
-    return view ('employee')
-    ->with('employee', $employee)
-    ->with('grade', $grade);
-    -with('age',$age);
-});
-    
-    //return view('employee', ['employee' => $employee]);
-    //return response()->json($employee);
+// User Authentication Routes
+Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [UserController::class, 'register']);
+Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [UserController::class, 'login']);
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::get('/profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');
